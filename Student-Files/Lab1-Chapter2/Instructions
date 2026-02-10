@@ -1,0 +1,191 @@
+Part 0 — Upgrade the Solution to .NET 10
+Task 0.1 — Open and Upgrade
+
+    Visual Studio Community 2026: Open UqsWeather.sln and accept the prompt to upgrade all projects to .NET 10.
+    VS Code: Open the solution folder and manually edit each .csproj file.
+
+Task 0.2 — Set TargetFramework to net10.0
+
+Ensure every project contains:
+
+<TargetFramework>net10.0</TargetFramework>
+
+Update production + test projects (e.g., Uqs.Weather, Uqs.Weather.Tests.Unit, and any supporting libraries).
+Task 0.3 — Update NuGet Packages
+
+Update to the latest compatible versions:
+
+    xunit
+    xunit.runner.visualstudio
+    Microsoft.NET.Test.Sdk
+    Microsoft.Extensions.*
+    AdamTibi.OpenWeather (if present)
+
+Task 0.4 — Verify .NET 10 SDK Installed
+
+dotnet --version
+
+Version should begin with 10.
+Part 1 — Dependency Identification (Tibi Ch. 2)
+Task 1.1 — Identify All Dependencies
+
+Open WeatherForecastController.cs. For each dependency:
+
+    Mark it as relevant or not relevant to unit testing.
+    Provide a brief justification (1–2 sentences).
+
+Hint: Logging, configuration, network calls, randomness, and time are typically relevant to testability.
+Part 2 — Refactor for Dependency Injection (Tibi Ch. 2)
+Task 2.1 — Ensure Required Abstractions Exist
+
+Create or verify these abstractions + implementations:
+
+    IClient
+    INowWrapper and NowWrapper
+    IRandomWrapper and RandomWrapper
+
+Task 2.2 — Refactor the Controller
+
+Replace direct instantiation and static calls with injected dependencies. Examples of what to remove/replace:
+
+    new Client(...)
+    new HttpClient()
+    DateTime.Now
+    Random.Shared
+
+Part 3 — Configure DI in Program.cs
+
+Add (or update) service registrations and lifetimes:
+
+// IClient registered as Singleton (reuse across the app lifecycle)
+builder.Services.AddSingleton<IClient>(sp =>
+{
+    string key = builder.Configuration["OpenWeather:Key"];
+    return new Client(key, new HttpClient());
+});
+
+// INowWrapper registered as Singleton (thread-safe and stateless)
+builder.Services.AddSingleton<INowWrapper, NowWrapper>();
+
+// IRandomWrapper registered as Transient (avoid shared mutable state)
+builder.Services.AddTransient<IRandomWrapper, RandomWrapper>();
+
+In your summary, briefly justify why each lifetime was chosen.
+Part 4 — Create the xUnit Test Project (Tibi Ch. 3)
+Task 4.1 — Create a .NET 10 xUnit Project
+
+dotnet new xunit -o Uqs.Weather.Tests.Unit -f net10.0
+dotnet sln add Uqs.Weather.Tests.Unit
+dotnet add Uqs.Weather.Tests.Unit reference Uqs.Weather
+
+Task 4.2 — Required Test Class Name
+
+Create WeatherForecastControllerTests.cs in the unit test project.
+Part 5 — Implement Unit Tests (AAA Pattern)
+Task 5.1 — ConvertCToF Tests
+
+Implement all of the following:
+
+    Two [Fact] tests:
+        0°C → 32°F
+        –1°C → 30.2°F
+    One [Theory] test with at least 5 [InlineData] cases.
+
+Use NullLogger so tests do not write real logs:
+
+// Using NullLogger so the test does not write actual log output.
+var logger = NullLogger<WeatherForecastController>.Instance;
+
+Task 5.2 — Required SUT Comment
+
+/*
+SUT: WeatherForecastController
+Behavior under test: ConvertCToF temperature conversion.
+*/
+
+Task 5.3 — AAA Comments Required in Every Test
+
+// Arrange
+// Act
+// Assert
+
+Part 6 — Submit Code to GitHub (Same Repo)
+Same repo rule: Push Lab 1 changes to your existing COSC 6055 GitHub repository. Do not create a new repo.
+Task 6.1 — Required Content in GitHub
+
+    Updated WeatherForecastController.cs
+    Updated .csproj files targeting net10.0
+    Abstractions and wrapper classes (IClient, INowWrapper/NowWrapper, IRandomWrapper/RandomWrapper)
+    Full unit test project (Uqs.Weather.Tests.Unit)
+    DI updates in Program.cs
+
+Task 6.2 — Required Final Commit Message
+
+Lab 1 Complete – DI + Unit Testing + .NET 10 Upgrade
+
+Part 7 — D2L Dropbox Requirements
+Task 7.1 — Repo Link Statement (Required)
+
+In the D2L dropbox text entry area, include:
+
+My completed Lab 1 submission is located in my existing COSC 6055 GitHub repository:
+https://github.com/<username>/<your-course-repo>
+
+Task 7.2 — Lab Summary (Choose ONE)
+
+    Option A: Write your summary in the D2L text entry area (below your repo link).
+    Option B: Upload a Word document named Lab1_Summary_<LastName>.docx.
+
+Do not submit a PDF summary.
+Summary Must Address These Topics
+
+    Description of the .NET 10 upgrade
+    List of controller dependencies + relevance
+    DI refactoring performed
+    DI lifetimes chosen + brief justification
+    Unit tests implemented + results (all passing)
+
+Part 8 — Code Comment Requirements
+
+To receive full credit, include clear, meaningful comments that explain why changes were made (not just what the code does).
+8.1 — Required Comments in WeatherForecastController.cs
+
+    Comment each injected dependency field to explain its purpose for testability.
+    Add a comment where you removed direct instantiation (new) to explain why DI is preferred.
+    Comment any usage of wrapper dependencies to explain how they enable deterministic tests.
+
+8.2 — Required Comments in Wrapper Classes
+
+    Explain why the wrapper exists (e.g., abstracting DateTime.Now or Random for predictable testing).
+
+8.3 — Required Comments in Program.cs
+
+    Explain why each service registration is needed.
+    Explain why the selected lifetime is appropriate.
+
+8.4 — Required Comments in Unit Tests
+
+    AAA comments in every test method.
+    SUT block comment at top of test class.
+    For Theory tests, annotate InlineData values with a brief note (Celsius input, expected Fahrenheit output).
+    Comment use of NullLogger to explain why it is used in unit tests.
+
+Submission Checklist
+
+    Code pushed to your existing GitHub repo
+    D2L text includes repo URL
+    Summary provided (D2L text or Word file)
+    All tests pass
+    Required code comments added
+
+Grading — 50 Points Total
+
+    Dependency identification — 10
+    DI refactoring — 10
+    DI service lifetimes — 5
+    .NET 10 upgrade — 5
+    Unit tests (Fact + Theory) — 10
+    Code commenting (Part 8 requirements) — 7
+    SUT explanation in tests — 2
+    GitHub + D2L submission requirements — 1
+    Total — 50
