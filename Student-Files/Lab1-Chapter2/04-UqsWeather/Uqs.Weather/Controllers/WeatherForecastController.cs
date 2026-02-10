@@ -9,9 +9,19 @@ namespace Uqs.Weather.Controllers;
 public class WeatherForecastController : ControllerBase
 {
     private const int FORECAST_DAYS = 5;
+    // IClient is injected so the controller isn't responsible for creating network clients.
+    // That separation keeps unit tests fast and local (tests can supply a stub instead of
+    // hitting the real OpenWeather API).
     private readonly IClient _client;
+
+    // INowWrapper abstracts DateTime.Now so time-dependent behavior can be tested deterministically.
     private readonly INowWrapper _nowWrapper;
+
+    // IRandomWrapper abstracts Random so random output can be controlled in tests.
     private readonly IRandomWrapper _randomWrapper;
+
+    // ILogger is injected so tests can avoid writing real logs (NullLogger) while still
+    // allowing the controller to log in production.
     private readonly ILogger<WeatherForecastController> _logger;
 
     private static readonly string[] Summaries = new[]
@@ -23,6 +33,9 @@ public class WeatherForecastController : ControllerBase
     public WeatherForecastController(ILogger<WeatherForecastController> logger,
         IClient client, INowWrapper nowWrapper, IRandomWrapper randomWrapper)
     {
+        // Instead of "new Client(...)" (or other direct instantiation) inside the controller,
+        // dependencies are supplied by the DI container. That keeps this focused on
+        // behavior and makes it easy to swap in fakes/stubs during unit testing.
         _logger = logger;
         _client = client;
         _nowWrapper = nowWrapper;
@@ -66,7 +79,10 @@ public class WeatherForecastController : ControllerBase
         for (int i = 0; i < wfs.Length; i++)
         {
             var wf = wfs[i] = new WeatherForecast();
+            // Using INowWrapper keeps "now" controllable in unit tests (no dependency on real time).
             wf.Date = _nowWrapper.Now.AddDays(i + 1);
+
+            // Using IRandomWrapper lets tests provide deterministic random values when needed.
             wf.TemperatureC = _randomWrapper.Next(-20, 55);
             wf.Summary = MapFeelToTemp(wf.TemperatureC);
         }
