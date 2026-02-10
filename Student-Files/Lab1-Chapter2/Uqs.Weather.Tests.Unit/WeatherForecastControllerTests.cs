@@ -20,6 +20,9 @@ public class WeatherForecastControllerTests
 
         // ConvertCToF doesn't use these collaborators, but the controller constructor requires them.
         // Keeping them as simple fakes avoids pulling in mocking frameworks for the first lab.
+        // Even though my unit tests focus on ConvertCToF (which doesn’t use time/random/network),
+        // the controller still depends on these components for other behaviors, so I identified
+        // them as relevant to overall controller testability. See written summary.
         IClient client = new ClientStub();
         INowWrapper nowWrapper = new FixedNowWrapper(new DateTime(2026, 2, 6, 12, 0, 0));
         IRandomWrapper randomWrapper = new FixedRandomWrapper(0);
