@@ -168,8 +168,8 @@ public sealed class AccountOpeningAutomationTests
             ApplicationStatus.Incomplete,
             Errors("Postal/Zip required")
         );
-
-        workflow.ValidateAddress(Arg.Is<Applicant>(a => a.Address?.PostalCode == "")).Returns(expected);
+        // Lesson learned, NSubstitute's Arg.Is uses an expression tree; so it can't handle null-propagation.
+        workflow.ValidateAddress(Arg.Is<Applicant>(a => a.Address != null && a.Address.PostalCode == "")).Returns(expected);
 
         var sut = new AccountOpeningAutomation(workflow);
 
