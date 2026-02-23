@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank4Us.AccountOpening", "src\Bank4Us.AccountOpening\Bank4Us.AccountOpening.csproj", "{351BB3FC-9F40-4929-954E-EDBB34D51A49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank4Us.AccountOpening.Tests.Unit", "tests\Bank4Us.AccountOpening.Tests.Unit\Bank4Us.AccountOpening.Tests.Unit.csproj", "{42753629-0E5B-46E8-9C37-E942D5CC53E2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{351BB3FC-9F40-4929-954E-EDBB34D51A49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{351BB3FC-9F40-4929-954E-EDBB34D51A49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{351BB3FC-9F40-4929-954E-EDBB34D51A49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{351BB3FC-9F40-4929-954E-EDBB34D51A49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42753629-0E5B-46E8-9C37-E942D5CC53E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42753629-0E5B-46E8-9C37-E942D5CC53E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42753629-0E5B-46E8-9C37-E942D5CC53E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42753629-0E5B-46E8-9C37-E942D5CC53E2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
