@@ -49,7 +49,7 @@ namespace Bank4Us.AccountOpening
     public static class ApplicantFactory
     {
         /// <summary>
-        /// Provides a canonical, valid applicant for tests.
+        /// Provides a baseline (known-good), valid applicant for tests.
         /// Tests can override individual properties to drive specific scenarios.
         /// </summary>
         public static Applicant CreateValid() => new()
@@ -125,7 +125,7 @@ namespace Bank4Us.AccountOpening
         /// </summary>
         public ProcessResult Run(Applicant applicant)
         {
-            // 1) ID validation short-circuits if there are errors
+            // 1) ID validation stops early upon failure detection (short-circuits) if there are errors
             var idErrors = _workflow.ValidateIdentificationNumber(applicant);
             if (idErrors.Count > 0)
             {
@@ -147,7 +147,7 @@ namespace Bank4Us.AccountOpening
                 return new ProcessResult(status, Array.Empty<ValidationError>());
             }
 
-            // 4) Final processing (happy path) returns the terminal result
+            // 4) Final processing, normal success path, returns the terminal result
             return _workflow.Process(applicant);
         }
     }
