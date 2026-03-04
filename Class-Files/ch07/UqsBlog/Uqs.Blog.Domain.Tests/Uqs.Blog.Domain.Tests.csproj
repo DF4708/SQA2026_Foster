@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- Lab requirement: xUnit v3 test project should be executable -->
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- xUnit.net v3 core package for writing tests -->
+    <PackageReference Include="xunit.v3" Version="3.2.2" />
+    <!-- VSTest adapter so 'dotnet test' and VS Test Explorer can discover/run tests -->
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <!-- Analyzers (style + correctness for tests) -->
+    <PackageReference Include="xunit.analyzers" Version="1.27.0" />
+    <!-- Test SDK (VSTest) integration -->
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Uqs.Blog.Domain\Uqs.Blog.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
