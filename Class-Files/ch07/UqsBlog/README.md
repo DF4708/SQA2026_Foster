@@ -11,6 +11,8 @@ This repository is updated to match the Lab 3 requirements:
 
 ## Build and Test
 
+- From `Domain.Tests` unzip the Archive.zip folder and pull out the bin and obj folders into the `Domain.Tests` folder.
+
 From the `UqsBlog` folder:
 
 > dotnet restore
